@@ -1,0 +1,119 @@
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <div class="brand-mark">T5</div>
+      <div>
+        <p class="brand-name">Control<br>room</p>
+        <p class="brand-caption">Tugas 05 / Front End</p>
+      </div>
+    </div>
+
+    <div class="menu-label">
+      <span>Navigation</span>
+      <span>{{ activeMenus.length }}/4</span>
+    </div>
+
+    <nav class="menu-list" aria-label="Menu dashboard">
+      <button
+        *ngFor="let menu of menus | slice:0:3"
+        class="menu-button"
+        [class.active]="isActive(menu.id)"
+        [attr.aria-pressed]="isActive(menu.id)"
+        (click)="toggleMenu(menu.id)"
+      >
+        <span class="menu-index">0{{ menu.id }}</span>
+        <span>{{ menu.label }}</span>
+        <span class="menu-state">{{ isActive(menu.id) ? '−' : '+' }}</span>
+      </button>
+
+      <button
+        class="menu-button parent-button"
+        [class.active]="isSubmenuActive()"
+        [class.expanded]="isSubmenuOpen"
+        [attr.aria-expanded]="isSubmenuOpen"
+        (click)="toggleSubmenu()"
+      >
+        <span class="menu-index">04</span>
+        <span>Menu 4</span>
+        <span class="menu-state">{{ isSubmenuOpen ? '−' : '+' }}</span>
+      </button>
+
+      <div class="submenu-list" *ngIf="isSubmenuOpen">
+        <button
+          *ngFor="let subMenu of subMenus"
+          class="submenu-button"
+          [class.active]="isActive(subMenu.id)"
+          [attr.aria-pressed]="isActive(subMenu.id)"
+          (click)="selectSubmenu(subMenu.id)"
+        >
+          <span class="submenu-marker">↳</span>
+          <span>{{ subMenu.label }}</span>
+          <span class="menu-state">{{ isActive(subMenu.id) ? '−' : '+' }}</span>
+        </button>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <span class="status-dot"></span>
+      <span>System online</span>
+    </div>
+  </aside>
+
+  <main class="dashboard">
+    <header class="dashboard-header">
+      <div>
+        <p class="eyebrow">Workspace / Dashboard</p>
+        <h1>Good morning<span>.</span></h1>
+        <p class="header-copy">Pilih menu di sebelah kiri untuk menampilkan komponen di area kerja.</p>
+      </div>
+      <div class="date-stamp">
+        <span>25</span>
+        <small>SEP<br>2026</small>
+      </div>
+    </header>
+
+    <section class="dashboard-content" *ngIf="activeMenus.length > 0; else emptyDashboard">
+      <div class="content-heading">
+        <div>
+          <p class="eyebrow">Active components</p>
+          <h2>Workspace overview</h2>
+        </div>
+        <span class="component-count">{{ activeMenus.length }} active</span>
+      </div>
+
+      <div class="card-grid">
+        <article
+          *ngFor="let menuId of activeMenus; let position = index"
+          class="menu-card"
+          [class]="getMenu(menuId).accent"
+        >
+          <div class="card-topline">
+            <span class="card-number">0{{ position + 1 }}</span>
+            <button class="close-button" (click)="removeComponent(menuId)" [attr.aria-label]="'Tutup ' + getMenu(menuId).label">×</button>
+          </div>
+          <p class="card-label">{{ getMenu(menuId).label }}</p>
+          <h3>{{ getMenu(menuId).title }}</h3>
+          <p class="card-description">{{ getMenu(menuId).description }}</p>
+          <div class="card-bottom">
+            <strong>{{ getMenu(menuId).metric }}</strong>
+            <span>View details <b>↗</b></span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <ng-template #emptyDashboard>
+      <section class="empty-dashboard">
+        <div class="empty-symbol"><span></span><span></span><span></span></div>
+        <p class="eyebrow">No components selected</p>
+        <h2>Your dashboard<br>is waiting.</h2>
+        <p class="empty-copy">Pilih salah satu menu dari sidebar untuk mulai menyusun workspace kamu.</p>
+      </section>
+    </ng-template>
+
+    <footer class="dashboard-footer">
+      <span>Designed for your workflow</span>
+      <span>Maximum 4 components</span>
+    </footer>
+  </main>
+</div>
